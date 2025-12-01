@@ -285,6 +285,10 @@ class _Tensor(Tensor):
     @property
     @lazily_load_dltensor
     def mlir_type(self) -> ir.Type:
+        # Note: get_type is defined in the native _cute extension. It consumes
+        # the DLPack metadata captured in the wrapper plus the requested MLIR
+        # element type/alignment, and synthesizes the ABI-facing MLIR type
+        # (pointer-to-memref descriptor with the correct address space/alignment).
         return self._dltensor_wrapper.get_type(
             self.element_type.mlir_type, self._assumed_align
         )
